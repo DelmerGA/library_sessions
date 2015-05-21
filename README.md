@@ -83,13 +83,13 @@ var express = require("express"),
     bodyParser = require("body-parser"),
     path = require("path");
 
-app = express();
+var app = express();
 app.use(bodyParser.urlencoded({extended: true }));
 
 var views = path.join(__dirname, "views");
 
 app.get("/", function (req, res) {
-  var homePath = path(views, "home.html";
+  var homePath = path.join(views, "home.html");
   res.sendFile(homePath);
 });
 
@@ -120,7 +120,7 @@ Then setup up your `user.js`.
 
 var mongoose = require("mongoose");
 
-var userSchema = new mongooose.Schema({
+var userSchema = new mongoose.Schema({
                   email: {
                     type: String,
                     lowercase: true,
@@ -176,9 +176,9 @@ You should then verify that you can create a `User` model in the node console.
 
 
 ```bash
-
-User.create({
-    email: "foo"
+var db = require("./models")
+db.User.create({
+    email: "foo",
     passwordDigest: "foo"
 }, function (err, user) {
   console.log(user);
@@ -217,12 +217,12 @@ userSchema.statics.createSecure = function (params, cb) {
 
   var that = this;
 
-  bcrypt.hash(pswrd, 12, function (err, hash) {
-    params.password_digest = hash;
+  bcrypt.hash(params.password, 12, function (err, hash) {
+    params.passwordDigest = hash;
     that.create(params, cb);
   });
 
-});
+};
 
 ```
 
@@ -336,7 +336,7 @@ userSchema.statics.authenticate = function (params, cb) {
       email: params.email
     },
     function (err, user) {
-      user.checkPswrd(params.password);
+      user.checkPswrd(params.password, cb);
     });
 };
 
@@ -401,7 +401,7 @@ app.post("/login", function (req, res) {
   var user = req.body.user;
 
   db.User.
-  authenticate(params,
+  authenticate(user,
   function (err, user) {
     if (!err) {
       res.redirect("/profile");
@@ -512,7 +512,7 @@ app.post("/login", function (req, res) {
   var user = req.body.user;
 
   db.User.
-  authenticate(params,
+  authenticate(user,
   function (err, user) {
     if (!err) {
       req.login(user); // <--- login
@@ -558,33 +558,6 @@ app.get("/profile", function (req, res) {
 ### Exercise 
 
 * Add a real `profile.html` page that users can view.
-
-
----
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
