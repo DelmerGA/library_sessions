@@ -446,8 +446,8 @@ var session = require("express-session");
 app.use(session({
   secret: "SUPER STUFF",
   resave: false,
-  saveUnitialized: true
-});
+  saveUninitialized: true
+}));
 ```
 
 Then we want to create our own little middle-ware for express.
@@ -495,7 +495,7 @@ app.post("/users", function (req, res) {
   createSecure(newUser, function (err, user) {
     if (user) {
       req.login(user); // <--- see here
-      res.send("/profile"); // <--- also here
+      res.redirect("/profile"); // <--- also here
     } else {
       res.redirect("/signup");
     }
