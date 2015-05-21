@@ -178,7 +178,7 @@ You should then verify that you can create a `User` model in the node console.
 ```bash
 
 User.create({
-    email: "foo"
+    email: "foo",
     passwordDigest: "foo"
 }, function (err, user) {
   console.log(user);
@@ -558,33 +558,6 @@ app.get("/profile", function (req, res) {
 ### Exercise 
 
 * Add a real `profile.html` page that users can view.
-
-
----
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
