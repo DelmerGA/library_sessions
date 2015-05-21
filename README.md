@@ -176,8 +176,8 @@ You should then verify that you can create a `User` model in the node console.
 
 
 ```bash
-
-User.create({
+var db = require("./models")
+db.User.create({
     email: "foo",
     passwordDigest: "foo"
 }, function (err, user) {
