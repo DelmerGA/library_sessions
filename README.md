@@ -222,7 +222,7 @@ userSchema.statics.createSecure = function (params, cb) {
     that.create(params, cb);
   });
 
-});
+};
 
 ```
 
