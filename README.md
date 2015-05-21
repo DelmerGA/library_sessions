@@ -436,6 +436,142 @@ npm install --save express-session
 Then get it setup quickly.
 
 
+`index.js`
+
+```javascript
+// add this to requires
+var session = require("express-session");
+
+// somewhere
+app.use(session({
+  secret: "SUPER STUFF",
+  resave: false,
+  saveUnitialized: true
+});
+```
+
+Then we want to create our own little middle-ware for express.
+
+`index.js`
+
+```javascript
+
+var loginHelpers = function (req, res, next) {
+
+  req.login = function (user) {
+    req.session.userId = user._id;
+    req.user = user;
+    return user;
+  };
+
+  req.logout = function () {
+    req.session.userId = null;
+    req.user  = null;
+  };
+
+  req.currentUser = function (cb) {
+    var userId = req.session.userId;
+    db.User.
+      findOne({
+        _id: userId
+      }, cb);
+  };
+
+  // careful to have this
+  next(); // real important
+};
+
+app.use(loginHelpers)
+```
+
+Then we have to go back through our routes to actually `login` users.
+
+`index.js`
+
+```javascript
+app.post("/users", function (req, res) {
+  var newUser = req.body.user;
+  db.User.
+  createSecure(newUser, function (err, user) {
+    if (user) {
+      req.login(user); // <--- see here
+      res.send("/profile"); // <--- also here
+    } else {
+      res.redirect("/signup");
+    }
+  });
+});
+```
+Let's do the same for the `login`.
+
+`index.js`
+
+```javascript
+
+app.post("/login", function (req, res) {
+  var user = req.body.user;
+
+  db.User.
+  authenticate(params,
+  function (err, user) {
+    if (!err) {
+      req.login(user); // <--- login
+      res.redirect("/profile");
+    } else {
+      res.redirect("/login");
+    }
+  })
+});
+
+```
+
+If you users can login then they should also have a `logout` route.
+
+`index.js`
+
+```javascript
+
+app.get("/logout", function (req, res) {
+  req.logout();
+  res.redirect("/");
+});
+
+```
+
+However, now we should also make sure our `profile` page shows something about our user.
+
+
+```javascript
+
+app.get("/profile", function (req, res) {
+  req.currentUser(function (err, user) {
+    if (!err) {
+      res.send(user.email);
+    } else {
+      res.redirect("/login");
+    }
+  });
+});
+
+```
+
+### Exercise 
+
+* Add a real `profile.html` page that users can view.
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
 
 
 
