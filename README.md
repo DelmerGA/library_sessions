@@ -446,7 +446,7 @@ var session = require("express-session");
 app.use(session({
   secret: "SUPER STUFF",
   resave: false,
-  saveUnitialized: true
+  saveUninitialized: true
 }));
 ```
 
@@ -495,7 +495,7 @@ app.post("/users", function (req, res) {
   createSecure(newUser, function (err, user) {
     if (user) {
       req.login(user); // <--- see here
-      res.send("/profile"); // <--- also here
+      res.redirect("/profile"); // <--- also here
     } else {
       res.redirect("/signup");
     }
