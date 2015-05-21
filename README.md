@@ -228,6 +228,7 @@ userSchema.statics.createSecure = function (params, cb) {
 
 Then we want to use the `createSecure` **static method** to add `Users` to our application.
 
+**NOTE**: you could save some backend time here and user frustration by doing validations on the frontend also.
 
 ## User Sign Up
 
@@ -323,6 +324,116 @@ userSchema.statics.authenticate = function (params, cb) {
 };
 
 ```
+
+
+We could clean this code up though. Let's make a method on the instance to allow us to check the password.
+
+
+```javascript
+
+userSchema.statics.authenticate = function (params, cb) {
+  this.findOne({
+      email: params.email
+    },
+    function (err, user) {
+      user.checkPswrd(params.password);
+    });
+};
+
+userSchema.methods.checkPswrd = function(password, cb) {
+  var user = this;
+  bcrypt.compare(password, 
+  this.passwordDigest, function (err, isMatch) {
+    if (isMatch) {
+      cb(null, user);
+    } else {
+      cb("OOPS", null);
+    }
+  });
+};
+```
+
+
+### Exercise
+
+* Validate that it works.
+
+------
+
+
+Now that we have an authenticate method let's make a login page work.
+
+`views/login.html`
+
+```html
+
+<form method="POST" action="/login">
+  <div>
+    <input type="text" name="user[email]">
+  </div>
+  <div>
+    <input type="password" name="user[password]">
+  </div>
+  <button>Sign Up</button>
+</form>
+```
+
+And looking at the above `method` and `action` we can start to guess what we'll be working on next.
+
+`index.js`
+
+```javascript
+app.get("/login", function (req, res) {
+  var loginPath = path.join(views, "login.html");
+
+  res.sendFile(loginPath);
+})
+
+```
+
+Then as we noted earlier we need a place to submit this form.
+
+`index.js`
+
+```javascript
+
+app.post("/login", function (req, res) {
+  var user = req.body.user;
+
+  db.User.
+  authenticate(params,
+  function (err, user) {
+    if (!err) {
+      res.redirect("/profile");
+    } else {
+      res.redirect("/login");
+    }
+  })
+});
+
+```
+
+**WE DON'T HAVE A PROFILE PAGE YET**
+
+
+```javascript
+
+app.get("/profile", function (req, res) {
+  res.send("COMING SOON");
+});
+
+```
+
+## Adding Sessions
+
+Now, there's a problem with everything we've done. **WE'VE LEFT OUT SESSIONS**. Let's get those started.
+
+
+```bash
+npm install --save express-session
+```
+
+Then get it setup quickly.
 
 
 
