@@ -336,7 +336,7 @@ userSchema.statics.authenticate = function (params, cb) {
       email: params.email
     },
     function (err, user) {
-      user.checkPswrd(params.password);
+      user.checkPswrd(params.password, cb);
     });
 };
 
@@ -512,7 +512,7 @@ app.post("/login", function (req, res) {
   var user = req.body.user;
 
   db.User.
-  authenticate(params,
+  authenticate(user,
   function (err, user) {
     if (!err) {
       req.login(user); // <--- login
