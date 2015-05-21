@@ -447,7 +447,7 @@ app.use(session({
   secret: "SUPER STUFF",
   resave: false,
   saveUnitialized: true
-});
+}));
 ```
 
 Then we want to create our own little middle-ware for express.
