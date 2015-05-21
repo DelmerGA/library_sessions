@@ -120,7 +120,7 @@ Then setup up your `user.js`.
 
 var mongoose = require("mongoose");
 
-var userSchema = new mongooose.Schema({
+var userSchema = new mongoose.Schema({
                   email: {
                     type: String,
                     lowercase: true,
