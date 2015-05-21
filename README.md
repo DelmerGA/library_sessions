@@ -217,8 +217,8 @@ userSchema.statics.createSecure = function (params, cb) {
 
   var that = this;
 
-  bcrypt.hash(params.passsword, 12, function (err, hash) {
-    params.password_digest = hash;
+  bcrypt.hash(params.password, 12, function (err, hash) {
+    params.passwordDigest = hash;
     that.create(params, cb);
   });
 
