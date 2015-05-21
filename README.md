@@ -401,7 +401,7 @@ app.post("/login", function (req, res) {
   var user = req.body.user;
 
   db.User.
-  authenticate(params,
+  authenticate(user,
   function (err, user) {
     if (!err) {
       res.redirect("/profile");
